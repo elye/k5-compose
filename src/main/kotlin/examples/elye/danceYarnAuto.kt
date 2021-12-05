@@ -14,26 +14,18 @@ import java.lang.Float.min
 import kotlin.math.abs
 
 fun danceYarnAuto() = k5 {
-    val loop = 10000
+    val noiseValuesGenerator = NoiseValuesGenerator()
     val mouseVector = Vector2D()
-    var m2d3dvec = 0
-    var isUp = true
     show(modifier = Modifier
         .pointerMoveFilter(onMove = {
             mouseVector.x = it.x
             mouseVector.y = it.y
             false })) {
         it.apply {
-            when {
-                isUp && m2d3dvec > loop * loop -> { isUp = false }
-                isUp -> { m2d3dvec++ }
-                m2d3dvec <= 0 -> { isUp = true }
-                else -> { m2d3dvec-- }
-            }
+            noiseValuesGenerator.change()
+            val (m2d, m3d) = noiseValuesGenerator
             var offset = 0.0
             mouseVector += Vector2D((-1..1).random().toFloat(), (-1..1).random().toFloat())
-            val m2d = m2d3dvec/loop * 0.002
-            val m3d = abs(m2d3dvec%loop - loop/2) * 0.002
             for (i in 0 until max(0f, mouseVector.x - 2).toInt()) {
                 fun noiseX(variant: Double) = 2 * dimensFloat.width * noise3D(variant, m2d, m3d)
                 fun noiseY(variant: Double) = 2 * dimensFloat.height * noise3D(offset + variant, m2d, m3d)
@@ -53,5 +45,49 @@ fun danceYarnAuto() = k5 {
                 offset += 0.002
             }
         }
+    }
+}
+
+class NoiseValuesGenerator(
+    private val constantLooper: Int = 10000,
+    private val constantNoiseWeight: Float = 0.002f) {
+
+    private var incrementalValue = 0
+    private var isUp = true
+    private val noise2Dparam: Float
+        get() = iterateZeroToLoop()
+    private val noise3Dparam: Float
+        get() = iterateZeroToHalfLoopAndReverse()
+
+    private fun iterateZeroToHalfLoopAndReverse() =
+        abs(incrementalValue % constantLooper - constantLooper / 2).toFloat()
+    private fun iterateZeroToLoop() = incrementalValue / constantLooper.toFloat()
+
+    fun change() {
+        if (isUp) {
+            if (isReachingMax()) {
+                reverseChange()
+            } else {
+                incrementalValue++
+            }
+        } else {
+            if (isReachingMin()) {
+                reverseChange()
+            } else {
+                incrementalValue--
+            }
+        }
+    }
+
+    private fun reverseChange() { isUp = !isUp }
+    private fun isReachingMin() = incrementalValue <= 0
+    private fun isReachingMax() = incrementalValue > constantLooper * constantLooper
+
+    operator fun component1(): Double {
+        return (noise2Dparam * constantNoiseWeight).toDouble()
+    }
+
+    operator fun component2(): Double {
+        return (noise3Dparam * constantNoiseWeight).toDouble()
     }
 }
