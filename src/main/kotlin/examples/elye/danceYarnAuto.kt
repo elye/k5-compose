@@ -43,24 +43,53 @@ private fun drawYarnLine(
     drawScope: DrawScope,
     mouseVector: Vector2D
 ) {
-    fun noiseX(variant: Double) = 2 * size.width * noise3D(variant, m2d, m3d)
-    fun noiseY(variant: Double) = 2 * size.height * noise3D(offset + variant, m2d, m3d)
-    fun color(variant: Double) = 0xFF - (0xFF * noise3D(variant, m2d, m3d)).toInt()
-    val x = FloatArray(4) { index -> noiseX(offset + 5 + index * 10).toFloat() }
-    val y = FloatArray(5) { index -> noiseY(offset + 5 + index * 10).toFloat() }
-    val path = Path()
-    path.moveTo(x[0], y[0])
-    path.cubicTo(x[1], y[1], x[2], y[2], x[2], y[2])
-    val red = color(offset + 35)
-    val green = color(offset + 25)
-    val blue = color(offset + 15)
+    val (x, y) = generateYarnLineCoordinates(size, m2d, m3d, offset)
+    val (red, green, blue) = generateYarnLineColor(m2d, m3d, offset)
+    val path = createYarnLinePathFromCoordinates(x, y)
     drawScope.drawPath(
         path,
         Color(red, green, blue),
-        alpha = max(min(mouseVector.y / size.height, 1f), 0f),
+        alpha = getMouseYCoordinate(mouseVector, size),
         style = Stroke(width = 0.3f)
     )
+}
 
+private fun getMouseYCoordinate(mouseVector: Vector2D, size: Size) =
+    max(min(mouseVector.y / size.height, 1f), 0f)
+
+private fun createYarnLinePathFromCoordinates(
+    x: FloatArray,
+    y: FloatArray
+): Path {
+    val path = Path()
+    path.moveTo(x[0], y[0])
+    path.cubicTo(x[1], y[1], x[2], y[2], x[2], y[2])
+    return path
+}
+
+private fun generateYarnLineColor(
+    m2d: Double,
+    m3d: Double,
+    offset: Double
+): Triple<Int, Int, Int> {
+    fun color(variant: Double) = 0xFF - (0xFF * noise3D(variant, m2d, m3d)).toInt()
+    val red = color(offset + 35)
+    val green = color(offset + 25)
+    val blue = color(offset + 15)
+    return Triple(red, green, blue)
+}
+
+private fun generateYarnLineCoordinates(
+    size: Size,
+    m2d: Double,
+    m3d: Double,
+    offset: Double
+): Pair<FloatArray, FloatArray> {
+    fun noiseX(variant: Double) = 2 * size.width * noise3D(variant, m2d, m3d)
+    fun noiseY(variant: Double) = 2 * size.height * noise3D(offset + variant, m2d, m3d)
+    val x = FloatArray(4) { index -> noiseX(offset + 5 + index * 10).toFloat() }
+    val y = FloatArray(4) { index -> noiseY(offset + 5 + index * 10).toFloat() }
+    return Pair(x, y)
 }
 
 class NoiseParamsGenerator(
