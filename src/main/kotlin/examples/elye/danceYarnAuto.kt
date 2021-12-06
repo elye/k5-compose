@@ -52,14 +52,14 @@ class NoiseValuesGenerator(
 
     private var incrementalValue = 0
     private var isUp = true
-    private val noise2Dparam: Float
+    private val noise2Dparam: Int
         get() = iterateZeroToLoop()
-    private val noise3Dparam: Float
+    private val noise3Dparam: Int
         get() = iterateZeroToHalfLoopAndReverse()
 
     private fun iterateZeroToHalfLoopAndReverse() =
-        abs(incrementalValue % constantLooper - constantLooper / 2).toFloat()
-    private fun iterateZeroToLoop() = incrementalValue / constantLooper.toFloat()
+        abs(incrementalValue % constantLooper - constantLooper / 2)
+    private fun iterateZeroToLoop() = incrementalValue / constantLooper
 
     fun change() {
         if (isUp) {
