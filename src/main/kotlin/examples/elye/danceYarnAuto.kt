@@ -58,7 +58,7 @@ class NoiseValuesGenerator(
         get() = iterateZeroToHalfLoopAndReverse()
 
     private fun iterateZeroToHalfLoopAndReverse() =
-        abs(incrementalValue % constantLooper - constantLooper / 2)
+        abs(abs(incrementalValue % constantLooper - constantLooper / 2) - constantLooper / 2)
     private fun iterateZeroToLoop() = incrementalValue / constantLooper
 
     fun change() {
