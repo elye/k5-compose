@@ -8,7 +8,6 @@ import androidx.compose.ui.input.pointer.pointerMoveFilter
 import k5
 import math.Vector2D
 import math.noise3D
-import math.plusAssign
 import java.lang.Float.max
 import java.lang.Float.min
 import kotlin.math.abs
@@ -25,7 +24,6 @@ fun danceYarnAuto() = k5 {
             noiseValuesGenerator.change()
             val (m2d, m3d) = noiseValuesGenerator
             var offset = 0.0
-            mouseVector += Vector2D((-1..1).random().toFloat(), (-1..1).random().toFloat())
             for (i in 0 until max(0f, mouseVector.x - 2).toInt()) {
                 fun noiseX(variant: Double) = 2 * dimensFloat.width * noise3D(variant, m2d, m3d)
                 fun noiseY(variant: Double) = 2 * dimensFloat.height * noise3D(offset + variant, m2d, m3d)
