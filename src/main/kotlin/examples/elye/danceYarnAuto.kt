@@ -15,7 +15,7 @@ import java.lang.Float.min
 import kotlin.math.abs
 
 fun danceYarnAuto() = k5 {
-    val noiseParamssGenerator = NoiseParamsGenerator()
+    val noiseParamsGenerator = NoiseParamsGenerator()
     val mouseVector = Vector2D()
 
     show(modifier = Modifier
@@ -24,8 +24,8 @@ fun danceYarnAuto() = k5 {
             mouseVector.y = it.y
             false })) {
         it.apply {
-            noiseParamssGenerator.change()
-            val (m2d, m3d) = noiseParamssGenerator
+            noiseParamsGenerator.change()
+            val (m2d, m3d) = noiseParamsGenerator
             var offset = 0.0
             for (i in 0 until getMouseXCoordinate(mouseVector)) {
                 drawYarnLine(dimensFloat, offset, m2d, m3d, this, mouseVector)
