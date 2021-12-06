@@ -13,7 +13,7 @@ import java.lang.Float.min
 import kotlin.math.abs
 
 fun danceYarnAuto() = k5 {
-    val noiseValuesGenerator = NoiseValuesGenerator()
+    val noiseValuesGenerator = NoiseParamsGenerator()
     val mouseVector = Vector2D()
     show(modifier = Modifier
         .pointerMoveFilter(onMove = {
@@ -46,7 +46,7 @@ fun danceYarnAuto() = k5 {
     }
 }
 
-class NoiseValuesGenerator(
+class NoiseParamsGenerator(
     private val constantLooper: Int = 10000,
     private val constantNoiseWeight: Float = 0.002f) {
 

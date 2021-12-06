@@ -23,6 +23,7 @@ dependencies {
     implementation(project("k5-compose"))
     // implementation("me.nikhilchaudhari:k5-compose:1.0.0-alpha01")
     dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.5.30")
+    testImplementation( "junit:junit:4.13.2")
 }
 
 tasks.withType<KotlinCompile>() {
