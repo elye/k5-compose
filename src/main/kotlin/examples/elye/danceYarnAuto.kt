@@ -27,13 +27,16 @@ fun danceYarnAuto() = k5 {
             noiseParamssGenerator.change()
             val (m2d, m3d) = noiseParamssGenerator
             var offset = 0.0
-            for (i in 0 until max(0f, mouseVector.x - 2).toInt()) {
+            for (i in 0 until getMouseXCoordinate(mouseVector)) {
                 drawYarnLine(dimensFloat, offset, m2d, m3d, this, mouseVector)
                 offset += 0.002
             }
         }
     }
 }
+
+private fun getMouseXCoordinate(mouseVector: Vector2D) =
+    max(0f, mouseVector.x - 2).toInt()
 
 private fun drawYarnLine(
     size: Size,
