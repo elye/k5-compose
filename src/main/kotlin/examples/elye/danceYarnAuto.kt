@@ -50,16 +50,35 @@ class NoiseParamsGenerator(
     private val constantLooper: Int = 10000,
     private val constantNoiseWeight: Float = 0.002f) {
 
-    private var incrementalValue = 0
-    private var isUp = true
+    private val upDownCounter = UpDownCounter(constantLooper * constantLooper)
+
+    private val incrementalValue: Int
+        get() = upDownCounter.incrementalValue
+
     private val noise2Dparam: Int
         get() = iterateZeroToLoop()
     private val noise3Dparam: Int
         get() = iterateZeroToHalfLoopAndReverse()
 
+    fun change() = upDownCounter.change()
+
     private fun iterateZeroToHalfLoopAndReverse() =
         abs(abs(incrementalValue % constantLooper - constantLooper / 2) - constantLooper / 2)
     private fun iterateZeroToLoop() = incrementalValue / constantLooper
+
+
+    operator fun component1(): Double {
+        return (noise2Dparam * constantNoiseWeight).toDouble()
+    }
+
+    operator fun component2(): Double {
+        return (noise3Dparam * constantNoiseWeight).toDouble()
+    }
+}
+
+class UpDownCounter(private val maxValue: Int) {
+    var incrementalValue = 0
+    private var isUp = true
 
     fun change() {
         if (isUp) {
@@ -79,13 +98,5 @@ class NoiseParamsGenerator(
 
     private fun reverseChange() { isUp = !isUp }
     private fun isReachingMin() = incrementalValue <= 0
-    private fun isReachingMax() = incrementalValue > constantLooper * constantLooper
-
-    operator fun component1(): Double {
-        return (noise2Dparam * constantNoiseWeight).toDouble()
-    }
-
-    operator fun component2(): Double {
-        return (noise3Dparam * constantNoiseWeight).toDouble()
-    }
+    private fun isReachingMax() = incrementalValue > maxValue
 }
