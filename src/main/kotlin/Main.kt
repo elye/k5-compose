@@ -1,9 +1,7 @@
 
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.graphics.ExperimentalGraphicsApi
-import examples.elye.amoeba
-import examples.elye.danceYarnAuto
-import examples.elye.landscapeInspection
+import examples.elye.landscapeWave
 
 @ExperimentalGraphicsApi
 @ExperimentalComposeUiApi
@@ -55,5 +53,6 @@ fun main() {
     // danceYarnMouse()
     // danceYarnAuto()
     // landscapeInspection()
-    amoeba()
+    // amoeba()
+    landscapeWave()
 }
